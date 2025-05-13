@@ -248,7 +248,7 @@ h2 {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  background-image: url("src/assets/images/contact.jpg");
+  background-image: url("../../assets/images/contact.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
