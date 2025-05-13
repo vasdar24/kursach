@@ -5,9 +5,26 @@ import { ref, computed, onMounted } from "vue";
 
 const router = useRouter();
 
+const currentUser = ref(JSON.parse(localStorage.getItem("currentUser")) || {});
+const isAuthenticated = computed(() => !!currentUser.value.name);
+const showModal = ref(false);
+
+  
 function goToBuy() {
-  saveCart(); 
+  if (!isAuthenticated.value) {
+    showModal.value = true;
+    return;
+  }
+  saveCart();
   router.push("/buy");
+}
+
+function redirectToLogin() {
+  router.push("/login");
+}
+
+function closeModal() {
+  showModal.value = false;
 }
 
 
@@ -101,6 +118,15 @@ const totalPrice = computed(function() {
         <button class="checkout-btn" @click="goToBuy">Оформить заказ</button>
       </div>
     </div>
+
+    <div v-if="showModal" class="modal-overlay" @click="closeModal">
+      <div class="modal" @click.stop>
+        <h3>Для оформления заказа необходимо войти в аккаунт.</h3>
+        <div class="modal-actions">
+          <button @click="redirectToLogin">OK</button>
+        </div>
+      </div>
+    </div>   
   </div>
 </template>
 
@@ -248,4 +274,42 @@ button:hover,
   display: inline-block;
   text-decoration: none;
 }
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  color: #234c4b;
+  font-family: "Nunito", sans-serif;
+  background-color: #c7eedde8;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+  z-index: 1001;
+}
+
+.modal-actions button {
+  background-color: #346f6e;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-actions button:hover {
+  background-color: rgb(6, 75, 74);
+}
+  
 </style>
